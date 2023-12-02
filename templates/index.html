@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Labi Points Tracker</title>
+    <!-- Add any additional head content here (like linking CSS files) -->
+</head>
+<body>
+    <h1>Welcome to Labi Points Tracker</h1>
+    
+    <!-- Displaying Users and Their Balances -->
+    <h2>Users and Balances</h2>
+    {% if users %}
+        <ul>
+            {% for user in users %}
+                <li>{{ user.username }} - {{ user.balance }} points</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No users found.</p>
+    {% endif %}
+
+    <!-- Add more content here like forms for adding/subtracting points -->
+
+</body>
+</html>

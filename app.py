@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from os import environ
 from dotenv import load_dotenv
+from extensions import db
 
 load_dotenv()
 
@@ -18,28 +20,65 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_password}@{
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Create an SQLAlchemy object named `db` and bind it to your app
-db = SQLAlchemy(app)
+db.init_app(app)
+migrate = Migrate(app, db)
 
-# A simple model that represents a User
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    balance = db.Column(db.Integer, default=0)
+# Import models after db is defined
+from models import User, Transaction
 
-    def __repr__(self):
-        return '<User %r>' % self.username
+
+def add_user(username, balance):
+    #check if user already exists
+    existing_user = User.query.filter_by(username=username).first()
+    if existing_user:
+        return 'User already exists!'
+
+    new_user = User(username=username, balance=balance)
+    db.session.add(new_user)
+    db.session.commit()
 
 # Set up the index route
 @app.route('/')
 def index():
     # Create a new user and add them to the database
-    new_user = User(username="testuser")
-    db.session.add(new_user)
-    db.session.commit()
+    add_user('testuser', 0)
 
     # Query all users
     users = User.query.all()
     return render_template('index.html', users=users)
 
+@app.route('/add_points', methods=['POST'])
+def add_points():
+    data = request.json
+    username = data['username']
+    points = data['points']
+    description = data['description']
+    
+    user = User.query.filter_by(username=username).first()
+    if user:
+        user.add_points(points, description)
+        db.session.commit()
+        return jsonify({'status': 'success', 'new_balance': user.balance}), 200
+    else:
+        return jsonify({'status': 'user not found'}), 404
+
+@app.route('/subtract_points', methods=['POST'])
+def subtract_points():
+    data = request.json
+    username = data['username']
+    points = data['points']
+    
+    user = User.query.filter_by(username=username).first()
+    if user:
+        if user.subtract_points(points, description):
+            db.session.commit()
+            return jsonify({'status': 'success', 'new_balance': user.balance}), 200
+        else:
+            return jsonify({'status': 'insufficient balance'}), 400
+    else:
+        return jsonify({'status': 'user not found'}), 404
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)
+
+
