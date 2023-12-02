@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_apscheduler import APScheduler
 from flask_migrate import Migrate
+from functools import wraps
 from os import environ
 from dotenv import load_dotenv
 from extensions import db
@@ -8,6 +10,7 @@ from extensions import db
 load_dotenv()
 
 app = Flask(__name__)
+app.secret_key = environ.get('FLASK_SECRET_KEY')
 
 # Construct the database URI
 db_user = environ.get('POSTGRES_USER')
@@ -26,6 +29,15 @@ migrate = Migrate(app, db)
 # Import models after db is defined
 from models import User, Transaction
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:  # Assuming 'user_id' is stored in session upon login
+            # Redirect to login page, don't forget to return it!
+            return redirect(url_for('login', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 def add_user(username, balance):
     #check if user already exists
@@ -39,15 +51,57 @@ def add_user(username, balance):
 
 # Set up the index route
 @app.route('/')
+@login_required
 def index():
-    # Create a new user and add them to the database
-    add_user('testuser', 0)
-
     # Query all users
     users = User.query.all()
     return render_template('index.html', users=users)
 
+### User management routes ###
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    return redirect(url_for('login'))
+
+@app.route('/change_password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    if request.method == 'POST':
+        old_password = request.form['old_password']
+        new_password = request.form['new_password']
+
+        user = User.query.get(session['user_id'])  # Assuming user_id is stored in session
+
+        if user and user.check_password(old_password):
+            user.set_password(new_password)
+            db.session.commit()
+            flash('Password updated successfully')
+            return redirect(url_for('index'))
+        else:
+            flash('Incorrect old password')
+
+    return render_template('change_password.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username=username).first()
+
+        if user and user.check_password(password):
+            session['user_id'] = user.id
+            return redirect(url_for('index'))
+        else:
+            flash('Invalid username or password')
+
+    return render_template('login.html', error=flash)
+
+### User interaction routes ###
+
 @app.route('/add_points', methods=['POST'])
+@login_required
 def add_points():
     data = request.json
     username = data['username']

@@ -1,5 +1,7 @@
 Flask
+Flask-APScheduler
 Flask-SQLAlchemy
 Flask-Migrate
+Werkzeug
 python-dotenv
 psycopg2-binary

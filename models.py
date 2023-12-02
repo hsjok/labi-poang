@@ -1,5 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from extensions import db
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+
 
 # A simple model that represents a User
 class User(db.Model):
@@ -7,6 +10,7 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     balance = db.Column(db.Integer, default=0)
     transactions = db.relationship('Transaction', backref='user', lazy=True)
+    password_hash = db.Column(db.String(256))
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -28,6 +32,12 @@ class User(db.Model):
             return True
         return False
 
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
 
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -36,6 +46,7 @@ class Transaction(db.Model):
     change = db.Column(db.Integer, nullable=False)
     new_balance = db.Column(db.Integer, nullable=False)
     description = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return f"<Transaction {self.id} by User {self.user_id}>"
