@@ -147,7 +147,7 @@ def login():
         else:
             flash("Invalid username or password")
 
-    return render_template("login.html", error=flash)
+    return render_template("login.html")
 
 
 ### User interaction routes ###

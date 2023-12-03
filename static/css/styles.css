@@ -1,0 +1,41 @@
+body {
+    background-color: #0D0D0D;
+    color: white;
+    font-family: 'Roboto Mono', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    text-align: center;
+}
+
+.login-form .input-group {
+    margin-bottom: 15px;
+}
+
+input[type="text"], input[type="password"] {
+    border: 2px solid #33FF33;
+    background-color: transparent;
+    color: white;
+    padding: 5px;
+}
+
+input[type="submit"] {
+    background-color: #33FF33;
+    border: none;
+    color: black;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #4CAF50;
+}
+
+.error-message {
+    color: red;
+}
