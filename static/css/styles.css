@@ -39,3 +39,177 @@ input[type="submit"]:hover {
 .error-message {
     color: red;
 }
+
+/* Pulsating Glow Animation */
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 3px #33FF33, 0 0 6px #33FF33;
+    }
+    50% {
+        box-shadow: 0 0 5px #33FF33, 0 0 10px #33FF33;
+    }
+    100% {
+        box-shadow: 0 0 3px #33FF33, 0 0 6px #33FF33;
+    }
+}
+
+/* New styles for index.html */
+.main-container {
+    text-align: center;
+    width: 80%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 2px solid #33FF33;
+    border-radius: 10px;
+    background-color: #111;
+}
+
+h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin: 20px 0;
+    border-bottom: 1px solid #33FF33;
+    padding-bottom: 10px;
+}
+
+.user-card {
+    color: white;
+    margin: 10px;
+    padding: 20px;
+    border: 1px solid #33FF33;
+    border-radius: 5px;
+    background-color: #222;
+    box-shadow: 0 2px 4px rgba(0, 255, 33, 0.4);
+    animation: glow 1.5s infinite alternate; /* Add the glow animation */
+}
+.user-card h3 {
+    font-size: 1.2em;
+    margin-top: 0;
+    font-weight: normal;
+}
+
+.user-card p {
+    font-size: 2em; /* Larger font size for points */
+    font-weight: bold; /* Bold font weight for emphasis */
+    margin-top: 10px;
+}
+
+.user-card {
+    padding: 30px; /* Increased padding for more spacing */
+    transition: transform 0.3s ease; /* Smooth transform transition */
+}
+
+.user-card:hover {
+    transform: scale(1.05); /* Slight enlargement on hover */
+    box-shadow: 0 4px 6px rgba(0, 255, 33, 0.4); /* Enhanced box shadow on hover */
+}
+
+.user-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.user-container h3 {
+    margin-top: 0;
+}
+
+footer {
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #111;
+}
+
+footer a {
+    color: #33FF33;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+#matrix-rain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Place the effect behind your content */
+    color: #33FF33;
+    background-color: #0D0D0D;
+    font-family: 'Courier New', monospace;
+    font-size: 1.4em;
+    overflow: hidden;
+}
+
+.link-style-button {
+    background: none;
+    border: none;
+    color: #33FF33; /* Same color as your links */
+    cursor: pointer;
+    font-family: 'Roboto Mono', monospace; /* Same font as your other text */
+    font-size: 1em; /* Adjust as needed to match your links */
+    padding: 0; /* Removes default padding */
+}
+
+.link-style-button:hover, .link-style-button:focus {
+    outline: none; /* Removes the focus outline */
+    text-decoration: underline;
+}
+
+#pointsForm {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#pointsForm input[type="number"],
+#pointsForm input[type="text"] {
+    margin: 10px;
+    padding: 5px;
+}
+
+#pointsForm button {
+    padding: 5px 10px;
+    background-color: #33FF33;
+    color: black;
+    border: none;
+    cursor: pointer;
+}
+
+.message-container {
+    position: fixed; /* or absolute, depending on your layout */
+    top: 20px; /* adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #FF8000;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+    display: none; /* hidden by default */
+    opacity: 1;
+    transition: opacity 6s ease-out;
+}
+
+.message-container.fade-out {
+    opacity: 0;
+}
+
+.footer-item {
+    margin-right: 20px; /* Adjust as needed for spacing */
+}
+
+/* If you want the last item to not have a margin on the right */
+.footer-item:last-child {
+    margin-right: 0;
+}

@@ -99,8 +99,9 @@ def add_user(username, balance):
 @login_required
 def index():
     # Query all users
+    username = session.get("username", "default-username")
     users = User.query.all()
-    return render_template("index.html", users=users)
+    return render_template("index.html", users=users, username=username)
 
 
 ### User management routes ###
@@ -143,6 +144,7 @@ def login():
 
         if user and user.check_password(password):
             session["user_id"] = user.id
+            session["username"] = username
             return redirect(url_for("index"))
         else:
             flash("Invalid username or password")

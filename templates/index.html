@@ -3,27 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <title>Labi Points Tracker</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <!-- Add any additional head content here (like linking CSS files) -->
 </head>
 <body>
-    <h1>Welcome to Labi Points Tracker</h1>
+    <div id="matrix-rain"></div>
+    <div class="main-container">
+        <header>
+            <h1>Labispoäng</h1>
+        </header>
 
-    <!-- Displaying Users and Their Balances -->
-    <h2>Users and Balances</h2>
-    {% if users %}
-        <ul>
-            {% for user in users %}
-                <li>{{ user.username }} - {{ user.balance }} points</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No users found.</p>
-    {% endif %}
-
+        <!-- Displaying Users and Their Balances -->
+        <section class="user-balance">
+            <h2>Users and Balances</h2>
+            {% if users %}
+                <div class="user-container">
+                    {% for user in users %}
+                        <div class="user-card">
+                            <h3>{{ user.username }}</h3>
+                            <p>{{ user.balance }} poäng</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No users found.</p>
+            {% endif %}
+        </section>
+    </div>
+    <div id="messageContainer" class="message-container"></div>
     <!-- Add more content here like forms for adding/subtracting points -->
-    <a href="{{ url_for('change_password') }}">Change Password</a>
-    <!-- Logout Link -->
-    <a href="{{ url_for('logout') }}">Logout</a>
+    <footer>
+        <button id="addPointsButton" class="link-style-button footer-item">Add points</button>
+        <button id="spendPointsButton" class="link-style-button footer-item">Spend points</button>
+        <a href="{{ url_for('change_password') }}" class="footer-item">Change Password</a>
+        <a href="{{ url_for('logout') }}" class="footer-item">Logout</a>
+
+        <div id="addPointsForm" class="pointsForm" style="display: none;">
+            <input type="number" id="addPointsInput" placeholder="Points to add">
+            <input type="text" id="addDescriptionInput" placeholder="Description">
+            <button onclick="submitAddPoints()">Submit</button>
+        </div>
+        <div id="spendPointsForm" class="pointsForm" style="display: none;">
+            <input type="number" id="pointsInput" placeholder="Points to spend">
+            <input type="text" id="descriptionInput" placeholder="Description">
+            <button onclick="submitRemovePoints()">Submit</button>
+        </div>
+    </footer>
+    <script src="/static/js/matrixRain.js"></script>
+    <script src="/static/js/common.js"></script>
+    <script>
+        // Script for adding and spending points
+        // Toggle the spend points form
+        document.getElementById('spendPointsButton').addEventListener('click', function() {
+            document.getElementById('spendPointsForm').style.display = 'block';
+        });
+        document.getElementById('addPointsButton').addEventListener('click', function() {
+            document.getElementById('addPointsForm').style.display = 'block';
+        });
+
+        // Functions to handle form submission
+        function submitAddPoints() {
+            const points = parseInt(document.getElementById('addPointsInput').value, 10);
+            const description = document.getElementById('addDescriptionInput').value;
+            const username = "{{ username }}";
+
+            fetch('/add_points', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, points, description }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showMessage('Points added successfully. New balance: ' + data.new_balance);
+                    // Update the balance on the page if necessary
+                } else {
+                    showMessage('Error: ' + data.status);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+        function submitRemovePoints() {
+            const points = parseInt(document.getElementById('pointsInput').value, 10);
+            const description = document.getElementById('descriptionInput').value;
+            const username = "{{ username }}"
+
+            fetch('/subtract_points', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, points, description }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showMessage('Points deducted successfully. New balance: ' + data.new_balance);
+                    // Update the balance on the page if necessary
+                } else {
+                    showMessage('Error: ' + data.status);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
 
 </body>
 </html>
