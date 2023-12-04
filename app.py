@@ -15,6 +15,8 @@ from os import environ
 from dotenv import load_dotenv
 from extensions import db
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from models import Transaction
 
 
 # Define configuration class
@@ -188,6 +190,50 @@ def subtract_points():
             return jsonify({"status": "insufficient balance"}), 400
     else:
         return jsonify({"status": "user not found"}), 404
+
+
+@app.template_filter()
+def format_points(value):
+    try:
+        # Format with , thousands separators
+        return f"{value:,}"
+    except ValueError:
+        # If value can't be formatted, return it as is
+        return value
+
+
+# Add the filter to Jinja environment
+app.jinja_env.filters["format_int"] = format_points
+
+
+@app.route("/get_transactions/<int:user_id>", methods=["GET"])
+def get_transactions(user_id):
+    months = request.args.get("months", default=1, type=int)  # Default to last 1 month
+    end_date = datetime.now()
+    start_date = end_date - relativedelta(months=months)
+
+    # Query using SQLAlchemy ORM
+    transactions = (
+        Transaction.query.filter(
+            Transaction.user_id == user_id,
+            Transaction.created_at.between(start_date, end_date),
+        )
+        .order_by(Transaction.created_at.desc())
+        .all()
+    )
+
+    # Format transactions into a list of dictionaries
+    transactions_data = [
+        {
+            "description": trans.description,
+            "change": trans.change,
+            "new_balance": trans.new_balance,
+            "created_at": trans.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+        }
+        for trans in transactions
+    ]
+
+    return jsonify(transactions_data)
 
 
 if __name__ == "__main__":

@@ -1,29 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>login</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <!-- Add any additional head elements here -->
 </head>
 <body>
+    <div id="matrix-rain"></div>
     <div class="login-container">
-        <h1>Login</h1>
+        <h1>login</h1>
         {% for message in get_flashed_messages() %}
             <p class="error-message">{{ message }}</p>
         {% endfor %}
         <form method="post" action="{{ url_for('login') }}" class="login-form">
             <div class="input-group">
-                <label for="username">Username:</label>
+                <label for="username">username:</label>
                 <input type="text" name="username" placeholder="Username" required>
             </div>
 
             <div class="input-group">
-                <label for="password">Password:</label>
+                <label for="password">password:</label>
                 <input type="password" name="password" placeholder="Password" required>
             </div>
 
             <input type="submit" value="Login" class="login-button">
         </form>
     </div>
+
+    <script src="/static/js/matrixRain.js"></script>
 </body>
 </html>

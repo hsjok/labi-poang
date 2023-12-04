@@ -2,14 +2,19 @@ body {
     background-color: #0D0D0D;
     color: white;
     font-family: 'Roboto Mono', monospace;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    display: block;
+    text-align: center;
+    min-height: 100vh;
+    margin: 0;
 }
 
 .login-container {
     text-align: center;
+    margin: 20px auto;
+    padding: 50px;
+    border: 2px solid #33FF33;
+    border-radius: 10px;
+    background-color: #111;
 }
 
 .login-form .input-group {
@@ -55,10 +60,12 @@ input[type="submit"]:hover {
 
 /* New styles for index.html */
 .main-container {
+    display: block;
     text-align: center;
     width: 80%;
     max-width: 800px;
     margin: 20px auto;
+    margin-top: 80px;
     padding: 20px;
     border: 2px solid #33FF33;
     border-radius: 10px;
@@ -71,7 +78,7 @@ h1 {
 }
 
 h2 {
-    font-size: 1.5em;
+    font-size: 1.2em;
     margin: 20px 0;
     border-bottom: 1px solid #33FF33;
     padding-bottom: 10px;
@@ -82,6 +89,7 @@ h2 {
     margin: 10px;
     padding: 20px;
     border: 1px solid #33FF33;
+    cursor: pointer;
     border-radius: 5px;
     background-color: #222;
     box-shadow: 0 2px 4px rgba(0, 255, 33, 0.4);
@@ -120,9 +128,13 @@ h2 {
 }
 
 footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    margin: 0;
     color: white;
     text-align: center;
-    padding: 10px 0;
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -137,6 +149,25 @@ footer a {
 
 footer a:hover {
     text-decoration: underline;
+}
+
+.footer-username, .footer-placeholder {
+    flex: 1;
+    font-size: 0.8em; /* Smaller font size */
+    color: #33FF33; /* Adjust the color if needed */
+}
+
+.footer-center-items {
+    flex:2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Additional styling as needed */
+}
+
+.footer-placeholder {
+    /* This is an invisible placeholder to balance the space */
+    visibility: hidden;
 }
 
 #matrix-rain {
@@ -168,23 +199,44 @@ footer a:hover {
     text-decoration: underline;
 }
 
-#pointsForm {
-    margin-top: 20px;
-    text-align: center;
+.pointsForm {
+    background-color: transparent; /* or a very dark color */
+    color: #33FF33; /* neon green */
+    padding: 20px;
+    border-radius: 5px;
 }
 
-#pointsForm input[type="number"],
-#pointsForm input[type="text"] {
-    margin: 10px;
-    padding: 5px;
+.pointsForm button {
+    background-color: #33FF33; /* Neon green background */
+    color: #0D0D0D; /* Dark text color */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px; /* Optional: for rounded corners */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Optional: for a smooth color transition on hover */
+    font-family: 'Roboto Mono', monospace; /* Same font as your other text */
 }
 
-#pointsForm button {
-    padding: 5px 10px;
+.pointsForm button:hover {
+    background-color: #28A745; /* Slightly different shade of green for hover effect */
+}
+
+.pointsForm input[type="text"], .pointsForm input[type="number"] {
+    border: 2px solid #33FF33;
+    background-color: transparent;
+    color: white;
+    padding: 10px;
+    margin: 10px 0;
+    font-family: 'Roboto Mono', monospace; /* Same font as your other text */
+}
+
+.pointsForm input[type="submit"] {
     background-color: #33FF33;
-    color: black;
+    color: #0D0D0D;
+    padding: 10px 20px;
     border: none;
     cursor: pointer;
+    font-family: 'Roboto Mono', monospace; /* Same font as your other text */
 }
 
 .message-container {
@@ -199,6 +251,7 @@ footer a:hover {
     display: none; /* hidden by default */
     opacity: 1;
     transition: opacity 6s ease-out;
+    text-align: center;
 }
 
 .message-container.fade-out {
@@ -212,4 +265,71 @@ footer a:hover {
 /* If you want the last item to not have a margin on the right */
 .footer-item:last-child {
     margin-right: 0;
+}
+
+.transactions-box {
+    position: relative;
+    display: block;
+    text-align: center;
+    width: 80%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 2px solid #33FF33;
+    border-radius: 10px;
+    background-color: #111;
+}
+
+.transactions-list {
+    max-height: 400px; /* Adjust as needed */
+    overflow-y: auto; /* Makes the box scrollable */
+}
+
+.transaction {
+    border-bottom: 1px solid #ccc; /* Separator between transactions */
+    padding: 10px;
+}
+
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.transactions-table, .transactions-table th, .transactions-table td {
+    border: 1px solid #33FF33;
+    padding: 8px;
+    text-align: left;
+}
+
+.transactions-table th {
+    background-color: #222;
+    color: white;
+}
+
+.monthsSelect {
+    background-color: #111; /* Dark background */
+    color: #33FF33; /* Neon green text */
+    border: 2px solid #33FF33; /* Neon green border */
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.monthsSelect:hover, .monthsSelect:focus {
+    background-color: #222; /* Slightly lighter background on hover/focus */
+}
+
+.close-transactions-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    color: #33FF33; /* Neon green color */
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.close-transactions-btn:hover {
+    color: #4CAF50; /* Slightly different shade for hover effect */
 }

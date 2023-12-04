@@ -10,44 +10,77 @@
     <div id="matrix-rain"></div>
     <div class="main-container">
         <header>
-            <h1>Labispoäng</h1>
+            <h1>labispoäng</h1>
         </header>
 
         <!-- Displaying Users and Their Balances -->
         <section class="user-balance">
-            <h2>Users and Balances</h2>
+            <h2>users and balances</h2>
             {% if users %}
                 <div class="user-container">
                     {% for user in users %}
-                        <div class="user-card">
+                        <div class="user-card" onclick="loadTransactions(this, '{{ user.username }}')" data-user-id="{{ user.id }}">
                             <h3>{{ user.username }}</h3>
-                            <p>{{ user.balance }} poäng</p>
+                            <p>{{ user.balance|format_points }} points</p>
                         </div>
                     {% endfor %}
                 </div>
             {% else %}
-                <p>No users found.</p>
+                <p>no users found.</p>
             {% endif %}
         </section>
     </div>
+    <!-- New Transactions Box -->
+    <div id="transactionsBox" class="transactions-box" style="display: none;">
+        <button id="closeTransactionsBtn" class="close-transactions-btn">X</button>
+        <h3>transactions for <span id="transactionsUserName"></span></h3>
+        <select class="monthsSelect" style="margin-bottom: 20px;">
+            <option value="1">last 1 month</option>
+            <option value="3">last 3 months</option>
+            <option value="6">last 6 months</option>
+            <option value="12">last 12 months</option>
+            <!-- Additional options as needed -->
+        </select>
+        <table id="transactionsTable" class="transactions-table">
+            <thead>
+                <tr>
+                    <th>description</th>
+                    <th>change</th>
+                    <th>new balance</th>
+                    <th>date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Transactions rows will be appended here -->
+            </tbody>
+        </table>
+    </div>
+
     <div id="messageContainer" class="message-container"></div>
     <!-- Add more content here like forms for adding/subtracting points -->
     <footer>
-        <button id="addPointsButton" class="link-style-button footer-item">Add points</button>
-        <button id="spendPointsButton" class="link-style-button footer-item">Spend points</button>
-        <a href="{{ url_for('change_password') }}" class="footer-item">Change Password</a>
-        <a href="{{ url_for('logout') }}" class="footer-item">Logout</a>
-
+        <div class="footer-username">
+            Logged in as: <span id="loggedInUsername">{{ username }}</span>
+        </div>
         <div id="addPointsForm" class="pointsForm" style="display: none;">
             <input type="number" id="addPointsInput" placeholder="Points to add">
             <input type="text" id="addDescriptionInput" placeholder="Description">
-            <button onclick="submitAddPoints()">Submit</button>
+            <button onclick="submitAddPoints()">submit</button>
         </div>
         <div id="spendPointsForm" class="pointsForm" style="display: none;">
             <input type="number" id="pointsInput" placeholder="Points to spend">
             <input type="text" id="descriptionInput" placeholder="Description">
-            <button onclick="submitRemovePoints()">Submit</button>
+            <button onclick="submitRemovePoints()">submit</button>
         </div>
+        <div class="footer-center-items">
+            <button id="addPointsButton" class="link-style-button footer-item">add points</button>
+            <button id="spendPointsButton" class="link-style-button footer-item">spend points</button>
+            <a href="{{ url_for('change_password') }}" class="footer-item">change password</a>
+            <a href="{{ url_for('logout') }}" class="footer-item">logout</a>
+        </div>
+        <!-- Placeholder for balancing the layout -->
+        <div class="footer-placeholder"></div>
+
     </footer>
     <script src="/static/js/matrixRain.js"></script>
     <script src="/static/js/common.js"></script>
@@ -112,6 +145,47 @@
                 console.error('Error:', error);
             });
         }
+        function loadTransactions(element, userName) {
+            var userId = element.getAttribute('data-user-id');
+            var transactionsBox = document.getElementById('transactionsBox');
+            var transactionsList = document.getElementById('transactionsList');
+            transactionsUserName.textContent = userName; // Set the user's name
+            transactionsBox.style.display = 'block'; // Show the transactions box
+
+            // Directly access the monthsSelect dropdown
+            var monthsSelect = document.querySelector('.monthsSelect');
+            var months = monthsSelect.value;
+            fetch(`/get_transactions/${userId}?months=${months}`)
+                .then(response => response.json())
+                .then(data => {
+                    var transactionsTable = document.getElementById('transactionsTable').getElementsByTagName('tbody')[0];
+                    transactionsTable.innerHTML = ''; // Clear previous transactions
+
+                    if (data.length === 0) {
+                        let row = transactionsTable.insertRow();
+                        let cell = row.insertCell(0);
+                        cell.colSpan = 4;
+                        cell.innerHTML = 'No transactions found for this period.';
+                        return;
+                    }
+
+                    data.forEach(trans => {
+                        let row = transactionsTable.insertRow();
+                        row.insertCell(0).innerHTML = trans.description;
+                        row.insertCell(1).innerHTML = `<span style="color:${trans.change >= 0 ? 'green' : 'red'}">${trans.change}</span>`;
+                        row.insertCell(2).innerHTML = trans.new_balance.toLocaleString();
+                        row.insertCell(3).innerHTML = new Date(trans.created_at).toLocaleDateString(); // Format as just the date
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    transactionsTable.innerHTML = '<tr><td colspan="4">Error loading transactions.</td></tr>';
+                });
+        }
+        // Add event listener for the close button of the transactions box
+        document.getElementById('closeTransactionsBtn').addEventListener('click', function() {
+            document.getElementById('transactionsBox').style.display = 'none';
+        });
     </script>
 
 </body>
