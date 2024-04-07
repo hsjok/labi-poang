@@ -1,0 +1,335 @@
+body {
+    background-color: #0D0D0D;
+    color: white;
+    font-family: 'Roboto Mono', monospace;
+    display: block;
+    text-align: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.login-container {
+    text-align: center;
+    margin: 20px auto;
+    padding: 50px;
+    border: 2px solid #33FF33;
+    border-radius: 10px;
+    background-color: #111;
+}
+
+.login-form .input-group {
+    margin-bottom: 15px;
+}
+
+input[type="text"], input[type="password"] {
+    border: 2px solid #33FF33;
+    background-color: transparent;
+    color: white;
+    padding: 5px;
+}
+
+input[type="submit"] {
+    background-color: #33FF33;
+    border: none;
+    color: black;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #4CAF50;
+}
+
+.error-message {
+    color: red;
+}
+
+/* Pulsating Glow Animation */
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 3px #33FF33, 0 0 6px #33FF33;
+    }
+    50% {
+        box-shadow: 0 0 5px #33FF33, 0 0 10px #33FF33;
+    }
+    100% {
+        box-shadow: 0 0 3px #33FF33, 0 0 6px #33FF33;
+    }
+}
+
+/* New styles for index.html */
+.main-container {
+    display: block;
+    text-align: center;
+    width: 80%;
+    max-width: 800px;
+    margin: 20px auto;
+    margin-top: 80px;
+    padding: 20px;
+    border: 2px solid #33FF33;
+    border-radius: 10px;
+    background-color: #111;
+}
+
+h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 1.2em;
+    margin: 20px 0;
+    border-bottom: 1px solid #33FF33;
+    padding-bottom: 10px;
+}
+
+.user-card {
+    color: white;
+    margin: 10px;
+    padding: 20px;
+    border: 1px solid #33FF33;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #222;
+    box-shadow: 0 2px 4px rgba(0, 255, 33, 0.4);
+    animation: glow 1.5s infinite alternate; /* Add the glow animation */
+}
+.user-card h3 {
+    font-size: 1.2em;
+    margin-top: 0;
+    font-weight: normal;
+}
+
+.user-card p {
+    font-size: 2em; /* Larger font size for points */
+    font-weight: bold; /* Bold font weight for emphasis */
+    margin-top: 10px;
+}
+
+.user-card {
+    padding: 30px; /* Increased padding for more spacing */
+    transition: transform 0.3s ease; /* Smooth transform transition */
+}
+
+.user-card:hover {
+    transform: scale(1.05); /* Slight enlargement on hover */
+    box-shadow: 0 4px 6px rgba(0, 255, 33, 0.4); /* Enhanced box shadow on hover */
+}
+
+.user-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.user-container h3 {
+    margin-top: 0;
+}
+
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    margin: 0;
+    color: white;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #111;
+}
+
+footer a {
+    color: #33FF33;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+.footer-username, .footer-placeholder {
+    flex: 1;
+    font-size: 0.8em; /* Smaller font size */
+    color: #33FF33; /* Adjust the color if needed */
+}
+
+.footer-center-items {
+    flex:2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Additional styling as needed */
+}
+
+.footer-placeholder {
+    /* This is an invisible placeholder to balance the space */
+    visibility: hidden;
+}
+
+#matrix-rain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Place the effect behind your content */
+    color: #33FF33;
+    background-color: #0D0D0D;
+    font-family: 'Courier New', monospace;
+    font-size: 1.4em;
+    overflow: hidden;
+}
+
+.link-style-button {
+    background: none;
+    border: none;
+    color: #33FF33; /* Same color as your links */
+    cursor: pointer;
+    font-family: 'Roboto Mono', monospace; /* Same font as your other text */
+    font-size: 1em; /* Adjust as needed to match your links */
+    padding: 0; /* Removes default padding */
+}
+
+.link-style-button:hover, .link-style-button:focus {
+    outline: none; /* Removes the focus outline */
+    text-decoration: underline;
+}
+
+.pointsForm {
+    background-color: transparent; /* or a very dark color */
+    color: #33FF33; /* neon green */
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.pointsForm button {
+    background-color: #33FF33; /* Neon green background */
+    color: #0D0D0D; /* Dark text color */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px; /* Optional: for rounded corners */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Optional: for a smooth color transition on hover */
+    font-family: 'Roboto Mono', monospace; /* Same font as your other text */
+}
+
+.pointsForm button:hover {
+    background-color: #28A745; /* Slightly different shade of green for hover effect */
+}
+
+.pointsForm input[type="text"], .pointsForm input[type="number"] {
+    border: 2px solid #33FF33;
+    background-color: transparent;
+    color: white;
+    padding: 10px;
+    margin: 10px 0;
+    font-family: 'Roboto Mono', monospace; /* Same font as your other text */
+}
+
+.pointsForm input[type="submit"] {
+    background-color: #33FF33;
+    color: #0D0D0D;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Roboto Mono', monospace; /* Same font as your other text */
+}
+
+.message-container {
+    position: fixed; /* or absolute, depending on your layout */
+    top: 20px; /* adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #FF8000;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+    display: none; /* hidden by default */
+    opacity: 1;
+    transition: opacity 6s ease-out;
+    text-align: center;
+}
+
+.message-container.fade-out {
+    opacity: 0;
+}
+
+.footer-item {
+    margin-right: 20px; /* Adjust as needed for spacing */
+}
+
+/* If you want the last item to not have a margin on the right */
+.footer-item:last-child {
+    margin-right: 0;
+}
+
+.transactions-box {
+    position: relative;
+    display: block;
+    text-align: center;
+    width: 80%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 2px solid #33FF33;
+    border-radius: 10px;
+    background-color: #111;
+}
+
+.transactions-list {
+    max-height: 400px; /* Adjust as needed */
+    overflow-y: auto; /* Makes the box scrollable */
+}
+
+.transaction {
+    border-bottom: 1px solid #ccc; /* Separator between transactions */
+    padding: 10px;
+}
+
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.transactions-table, .transactions-table th, .transactions-table td {
+    border: 1px solid #33FF33;
+    padding: 8px;
+    text-align: left;
+}
+
+.transactions-table th {
+    background-color: #222;
+    color: white;
+}
+
+.monthsSelect {
+    background-color: #111; /* Dark background */
+    color: #33FF33; /* Neon green text */
+    border: 2px solid #33FF33; /* Neon green border */
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.monthsSelect:hover, .monthsSelect:focus {
+    background-color: #222; /* Slightly lighter background on hover/focus */
+}
+
+.close-transactions-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    color: #33FF33; /* Neon green color */
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.close-transactions-btn:hover {
+    color: #4CAF50; /* Slightly different shade for hover effect */
+}
