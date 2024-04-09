@@ -85,6 +85,18 @@
     <script src="{{ url_for('static', filename='js/matrixrain.js') }}"></script>
     <script src="{{ url_for('static', filename='js/common.js') }}"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+        // Check if there's a message in local storage
+        const message = localStorage.getItem('postTransactionMessage');
+        if (message) {
+            // Display the message
+            showMessage(message);
+            // Remove the message from local storage
+            localStorage.removeItem('postTransactionMessage');
+        }
+    });
+    </script>
+    <script>
         // Script for adding and spending points
         // Toggle the spend points form
         document.getElementById('spendPointsButton').addEventListener('click', function() {
@@ -110,8 +122,10 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    showMessage('Points added successfully. New balance: ' + data.new_balance);
-                    // Update the balance on the page if necessary
+                    const message = 'Points added successfully. New balance: ' + data.new_balance;
+                    localStorage.setItem('postTransactionMessage', message);
+                    // Reload page to update balances and reset form
+                    window.location.reload();
                 } else {
                     showMessage('Error: ' + data.status);
                 }
@@ -135,8 +149,10 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    showMessage('Points deducted successfully. New balance: ' + data.new_balance);
-                    // Update the balance on the page if necessary
+                    const message = 'Points deducted successfully. New balance: ' + data.new_balance;
+                    localStorage.setItem('postTransactionMessage', message);
+                    // Reload page to update balances and reset form
+                    window.location.reload();
                 } else {
                     showMessage('Error: ' + data.status);
                 }
