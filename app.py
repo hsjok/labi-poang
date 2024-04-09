@@ -10,6 +10,7 @@ from flask import (
 )
 from flask_apscheduler import APScheduler
 from flask_migrate import Migrate
+from flask_mail import Mail, Message
 from functools import wraps
 from os import environ
 from dotenv import load_dotenv
@@ -43,6 +44,19 @@ app.config[
 ] = f"postgresql://{db_user}:{db_password}@{db_host}/{db_name}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+app.config["MAIL_SERVER"] = "smtp.mailgun.org"
+app.config["MAIL_PORT"] = 587
+app.config["MAIL_USE_TLS"] = True
+app.config["MAIL_USERNAME"] = environ.get(
+    "EMAIL_USERNAME"
+)  # Your Mailgun SMTP Username
+app.config["MAIL_PASSWORD"] = environ.get(
+    "EMAIL_PASSWORD"
+)  # Your Mailgun SMTP Password
+app.config[
+    "MAIL_DEFAULT_SENDER"
+] = "LabisPoints@labilito.com"  # Your default "from" address
+
 # Create an SQLAlchemy object named `db` and bind it to your app
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -55,6 +69,9 @@ scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
 
+# Initialize the mail extension
+mail = Mail(app)
+
 
 # Function to add points
 def allocate_monthly_points():
@@ -66,10 +83,16 @@ def allocate_monthly_points():
         print(f"Allocated points on {datetime.now()}")
 
 
-# Schedule the task
+# Schedule tasks
 @scheduler.task("cron", id="monthly_points", month="*", day=1, hour=0, minute=0)
 def scheduled_task():
     allocate_monthly_points()
+
+
+@scheduler.task("cron", id="send_report", month="*", day=1, hour=0, minute=5)
+def send_report_task():
+    with app.app_context():
+        send_monthly_report_email()
 
 
 def login_required(f):
@@ -234,6 +257,68 @@ def get_transactions(user_id):
     ]
 
     return jsonify(transactions_data)
+
+
+def generate_monthly_report_data():
+    # Calculate the date range for the last month
+    end_date = datetime.now()
+    start_date = end_date - relativedelta(months=1)
+
+    users_data = []
+    users = User.query.all()
+
+    for user in users:
+        # Calculate net points spent for the last month for this user
+        transactions_last_month = Transaction.query.filter(
+            Transaction.user_id == user.id,
+            Transaction.created_at >= start_date,
+            Transaction.created_at < end_date,
+        ).all()
+
+        net_spent_last_month = sum(
+            t.change for t in transactions_last_month if t.change < 0
+        )  # Assuming negative change for spending
+
+        # Assuming User model has a method or attribute to get the current balance
+        current_balance = (
+            user.balance
+        )  # Or user.get_current_balance(), depending on your User model
+
+        users_data.append(
+            {
+                "username": user.username,
+                "net_spent_last_month": abs(
+                    net_spent_last_month
+                ),  # Make the spent amount positive for readability
+                "current_balance": current_balance,
+            }
+        )
+
+    return users_data
+
+
+def send_monthly_report_email():
+    report_data = generate_monthly_report_data()
+    email_body = "Dear Labis,\n\nHere is your monthly points summary:\n\n"
+
+    # Accumulate report data for both users
+    for user_data in report_data:
+        email_body += (
+            f"User: {user_data['username']}\n"
+            f"Net Points Spent Last Month: {user_data['net_spent_last_month']}\n"
+            f"Current Balance: {user_data['current_balance']}\n\n"
+        )
+
+    email_body += "Puss"
+
+    recipients = ["henriksjokvist94@gmail.com", "sofiawiklund.95@gmail.com"]
+
+    # Send the email
+    with app.app_context():
+        msg = Message(
+            "Your Monthly Points Summary", recipients=recipients, body=email_body
+        )
+        mail.send(msg)
 
 
 if __name__ == "__main__":
