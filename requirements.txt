@@ -2,6 +2,7 @@ Flask
 Flask-APScheduler
 Flask-SQLAlchemy
 Flask-Migrate
+Flask-Mail
 Werkzeug
 python-dotenv
 psycopg2-binary
