@@ -23,7 +23,7 @@ from models import Transaction
 # Define configuration class
 class Config:
     SCHEDULER_API_ENABLED = True
-    MONTHLY_POINTS = 2500
+    MONTHLY_POINTS = 5000
     # Other configurations
 
 
